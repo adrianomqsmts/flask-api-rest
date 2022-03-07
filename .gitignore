@@ -161,18 +161,15 @@ cython_debug/
 #.idea/
 
 ### VisualStudioCode ###
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-!.vscode/*.code-snippets
+.vscode
 
 # Local History for Visual Studio Code
 .history/
 
 # Built Visual Studio Code Extensions
 *.vsix
+
+bd.sqlite3
 
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
