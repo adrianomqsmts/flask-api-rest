@@ -2,7 +2,8 @@ name: Continuos Integration
 
 on: 
   push:
-    [master, main]
+    branches:
+      - [main, master]
 
 jobs:
   continuos_integration:
