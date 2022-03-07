@@ -3,12 +3,12 @@ from abc import ABC
 
 db = database.db
 
-class BaseModel():
-    
+
+class BaseModel:
     @classmethod
     def find_by_tile(cls, title):
         return cls.query.filter_by(title=title).first()
-    
+
     @classmethod
     def find_by_id(cls, id):
         return cls.query.filter_by(id=id).first()

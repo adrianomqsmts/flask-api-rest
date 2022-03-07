@@ -1,28 +1,30 @@
 """Servidor."""
 
-from typing import Optional 
+from typing import Optional
 
-from flask import Flask
+from flask import Flask, Blueprint
 from flask_restx import Api
 
 
-class Server():
+class Server:
     """Server Instace of application."""
 
     def __init__(self) -> None:
         """Init App and Api."""
         self.app = Flask(__name__)
+        self.blueprint = Blueprint("api", __name__, url_prefix="/api")
         self.api = Api(
-            self.app,
+            self.blueprint,
             version="1.0",
             title="RatingStars",
             description="Rating system for movies, series, etc.",
             doc="/doc",
         )
+        self.app.register_blueprint(self.blueprint)
 
     def set_config(self, config: Optional[dict] = None) -> None:
         """Configura a aplicação com um dicionário.
-        
+
         ou carregar das configuração padrão do arquivo config no servidor.
 
         :param config: Dicionário com os dados de configuração, defaults to None
@@ -44,5 +46,6 @@ class Server():
         :type host: str, optional
         """
         self.app.run(port=port, debug=debug, host=host)
-        
+
+
 server = Server()
