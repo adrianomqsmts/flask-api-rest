@@ -1,6 +1,8 @@
+from marshmallow_enum import EnumField
+
 from api.instances.ma import ma
 from api.models.rate import RateModel, TypeRate
-from marshmallow_enum import EnumField
+
 
 # Responsável por serealizar os dados do banco de dados no envio e na recepção destes dados
 # https://marshmallow-sqlalchemy.readthedocs.io/en/latest/

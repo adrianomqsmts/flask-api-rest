@@ -1,5 +1,6 @@
-from api.instances.database import database
 from abc import ABC
+
+from api.instances.database import database
 
 db = database.db
 

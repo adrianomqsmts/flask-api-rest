@@ -1,10 +1,10 @@
-from flask_restx import Resource, fields
 from flask import request
+from flask_restx import Resource, fields
 from marshmallow import ValidationError
+
+from api.instances.server import server
 from api.models.rate import RateModel, TypeRate
 from api.schemas.rate import RateSchema
-from api.instances.server import server
-
 
 api = server.api
 rate = api.namespace(
