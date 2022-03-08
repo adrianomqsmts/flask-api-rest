@@ -1,13 +1,13 @@
-"""SQLAlchemy Database Instaces"""
+"""SQLAlchemy Database Instaces."""
 
-from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
 
 class Database:
     """Database Class Operations."""
 
-    db: SQLAlchemy() = None
+    db: SQLAlchemy = None
 
     def __init__(self) -> None:
         """Inicializar o banco com o SQLAlchemy."""
@@ -30,4 +30,4 @@ class Database:
         pass
 
 
-database = Database()
+database: Database = Database()

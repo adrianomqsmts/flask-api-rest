@@ -2,7 +2,7 @@
 
 from typing import Optional
 
-from flask import Flask, Blueprint
+from flask import Blueprint, Flask
 from flask_restx import Api
 
 
@@ -48,4 +48,4 @@ class Server:
         self.app.run(port=port, debug=debug, host=host)
 
 
-server = Server()
+server: Server = Server()

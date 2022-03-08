@@ -1,3 +1,5 @@
+"""Modelo relacionados com as Avaliações."""
+
 from datetime import date, datetime
 from enum import Enum, auto
 
@@ -15,12 +17,18 @@ class TypeRate(Enum):
     SERIES = "Series"
     CARTOON = "Cartoon"
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """Transforma o ENUM da classe em seu valor.
+
+        :return: O valor da classe em string.
+        :rtype: str
+        """
         return self.value
 
 
 class RateModel(db.Model, BaseModel):
     """Modelo de Avaliação.
+
     atributos:
         id* (Integer): Identificador da avaliação
         title* (String): O título da avaliação
@@ -43,17 +51,37 @@ class RateModel(db.Model, BaseModel):
     date_posted = db.Column(db.DateTime, default=datetime.utcnow)
     # seasons = db.relationship("SeasonModel", cascade="all,delete", backref="seasons")
 
-    def __init__(self, title, content, rate_type, rate):
+    def __init__(self, title: str, content: str, rate_type: str, rate: int) -> None:
+        """Inicializa a instância.
 
+        :param title: O Título da Avaliação.
+        :type title: str
+        :param content: O Conteúdo da Avaliação.
+        :type content: str
+        :param rate_type: O Tipo da Avaliação ["Movie", "Anime", "Cartoon", "Series"]
+        :type rate_type: str
+        :param rate: A Nota da Avaliação [1-5]
+        :type rate: int
+        """
         self.title = title
         self.content = content
         self.rate_type = rate_type
         self.rate = rate
 
     def __repr__(self) -> str:
+        """Representação da classe.
+
+        :return: f"RatingModel(title={self.title}, content={self.content}), rate_type={self.rate_type}), rate={self.rate})"
+        :rtype: str
+        """
         return f"RatingModel(title={self.title}, content={self.content}), rate_type={self.rate_type}), rate={self.rate})"
 
-    def json(self):
+    def json(self) -> dict:
+        """Transforma a Instância em um dicionário de dados.
+
+        :return: O Dicionário com os dados da instância.
+        :rtype: dict
+        """
         return {
             "id": self.id,
             "title": self.title,
