@@ -48,4 +48,4 @@ class Server:
         self.app.run(port=port, debug=debug, host=host)
 
 
-server = Server()
+server: Server = Server()

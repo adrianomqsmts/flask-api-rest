@@ -1,3 +1,5 @@
+"""Marshmallow Instance."""
+
 from flask_marshmallow import Marshmallow
 
-ma = Marshmallow()
+ma: Marshmallow = Marshmallow()

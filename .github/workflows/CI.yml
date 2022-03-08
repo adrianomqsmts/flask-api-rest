@@ -26,8 +26,8 @@ jobs:
       - name: Executa o Black
         run:  python -m black --check api/
 
-      #- name: Executa o isort
-      #  run: python -m isort app.py --check
+      - name: Executa o isort
+        run: python -m isort api/ --check --profile black
 
       #- name: Executa o pydocstyle
       #  run:  python -m pydocstyle project/

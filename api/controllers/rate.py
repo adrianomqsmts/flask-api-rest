@@ -1,13 +1,15 @@
+"""Controler da rota de API de Avaliação."""
 from flask import request
 from flask_restx import Resource, fields
 from marshmallow import ValidationError
+from werkzeug.wrappers import Response
 
 from api.instances.server import server
 from api.models.rate import RateModel, TypeRate
 from api.schemas.rate import RateSchema
 
 api = server.api
-rate = api.namespace(
+rate_ns = api.namespace(
     name="Rating", description="Rating related Operations", path="/rate"
 )
 
@@ -17,7 +19,9 @@ rate_list_schema = RateSchema(many=True)  # Serializa múltiplos Objetos
 from flask import url_for
 
 
-def make_public_rate(rate):
+# https://www.treinaweb.com.br/blog/o-que-e-hateoas
+def make_public_rate(rate: RateModel) -> dict:
+    """Create a public URI based on that ID."""
     new_rate = {
         "title": rate["title"],
         "content": rate["content"],
@@ -29,7 +33,7 @@ def make_public_rate(rate):
     return new_rate
 
 
-model_get = rate.model(
+model_output = rate_ns.model(
     "Model",
     {
         "title": fields.String(),
@@ -40,7 +44,7 @@ model_get = rate.model(
     },
 )
 
-model_post = rate.model(
+model_input = rate_ns.model(
     "Model",
     {
         "title": fields.String(
@@ -58,8 +62,17 @@ model_post = rate.model(
 
 
 class Rate(Resource):
-    @rate.marshal_with(model_get)
-    def get(self, id):
+    """Classe que trabalha com o CRUD baseado no ID."""
+
+    @rate_ns.marshal_with(model_output)
+    def get(self, id: int) -> Response:
+        """Pesquisa um avaliação com base no identificador único.
+
+        :param id: Identificador da avaliação
+        :type id: _type_
+        :return: A Avaliação pesquisada, caso contrário,  {"message": "None Rate could be found"}, 404
+        :rtype: Response
+        """
         rate_data = RateModel.find_by_id(id)
         if rate_data:
             rate_data = rate_schema.dump(rate_data)
@@ -68,8 +81,15 @@ class Rate(Resource):
         else:
             return {"message": "That Rate could not be found"}, 404
 
-    @rate.expect(model_post)
-    def put(self, id):
+    @rate_ns.expect(model_input)
+    def put(self, id: int) -> Response:
+        """Atualiza um dado existente com base no seu identificador único.
+
+        :param id: O identificador da Avaliação a ser atualiazada
+        :type id: int
+        :return: A propria avaliação atualizada, caso contrário,  {"message": "None Rate could be found"}, 404
+        :rtype: Response
+        """
         rate_data = RateModel.find_by_id(id)
         if rate_data:
             rate_json = request.get_json()
@@ -85,7 +105,14 @@ class Rate(Resource):
         else:
             return {"message": "None Rate could be found"}, 404
 
-    def delete(self, id):
+    def delete(self, id: int) -> Response:
+        """Remove uma Avaliação existente com base no identificador único.
+
+        :param id: O identificador da Avaliação a ser removida
+        :type id: int
+        :return: 204, caso contrário,  {"message": "None Rate could be found"}, 404
+        :rtype: Response
+        """
         book_data = RateModel.find_by_id(id)
         if book_data:
             book_data.delete_from_db()
@@ -95,8 +122,15 @@ class Rate(Resource):
 
 
 class RateList(Resource):
-    @rate.marshal_list_with(model_get)
-    def get(self):
+    """Casse de Inserção de uma Avaliação e Leitura de múltiplas Avaliações."""
+
+    @rate_ns.marshal_list_with(model_output)
+    def get(self) -> Response:
+        """Pesquisa todas as Avaliações existentes no Banco de Dados.
+
+        :return: Todas as avaliações no Banco de Dados 200, caso contrário, {"message": "None Rate could be found"}, 404
+        :rtype: Response
+        """
         rate_all_data = RateModel.find_all()
         if rate_all_data:
             rate_uri = []
@@ -108,9 +142,14 @@ class RateList(Resource):
         else:
             return {"message": "None Rate could be found"}, 404
 
-    @rate.expect(model_post, validate=True)  # Modelo de dados esperados
-    @rate.doc("Create an Item")  # Descrição para a requisição post
-    def post(self):
+    @rate_ns.expect(model_input, validate=True)  # Modelo de dados esperados
+    @rate_ns.doc("Create an Item")  # Descrição para a requisição post
+    def post(self) -> Response:
+        """Insere uma nova avaliações no Banco de Dados.
+
+        :return: A própria avaliação inserida, 201, caso contrário, 422
+        :rtype: Response
+        """
         try:
             rate_json = (
                 request.get_json()
@@ -120,16 +159,3 @@ class RateList(Resource):
             return rate_schema.dump(rate_data), 201
         except ValidationError as err:
             return err.messages, 422
-
-
-"""     @rate.expect([model], validate=True) # Modelo de dados esperados, com a validação ativada
-    @rate.doc("Create many items") # Descrição para a requisição post
-    def post(self):
-        try:
-            rate_json = request.get_json() # pega tudo que está dentro do body da requisição
-            rate_all_data = rate_list_schema.load(rate_json) # Carrega o Json para um Objeto
-            for rate_data in rate_all_data:
-                rate_data.save_to_db()
-            return rate_list_schema.dump(rate_all_data), 201
-        except ValidationError as err:
-            return  {'errors': err.messages, 'message': 'Input payload validation failed'}, 422 """
