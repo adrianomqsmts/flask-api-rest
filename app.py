@@ -2,7 +2,7 @@ from flask_restx import Resource
 from api.instances.server import server
 from api.instances.ma import ma
 from api.instances.database import database
-from api.controllers.rate import Rate, RateList, rate
+from api.controllers.rate import Rate, RateList, rate_ns
 
 
 app = server.app

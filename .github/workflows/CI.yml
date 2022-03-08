@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - '**/README.md'
+      - '**/readme.md'
+      - '**/readme'
 
 jobs:
   continuos_integration:
@@ -29,8 +33,8 @@ jobs:
       - name: Executa o isort
         run: python -m isort api/ --check --profile black
 
-      #- name: Executa o pydocstyle
-      #  run:  python -m pydocstyle project/
+      - name: Executa o pydocstyle
+        run:  python -m pydocstyle api/
 
       - name: Pytest
         run: python -m pytest -x -v
